@@ -1,242 +1,672 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-<title>Portfolio</title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto'>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<style>
-html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif}
-h2{
-    margin-left: 25px;
-}
-.myclass{
-    background-color: brown !important;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV - Salim Oujjet</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.7;
+            color: #1a202c;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: auto;
+        }
+
+        .sidebar {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
+            padding: 25px 20px;
+            position: relative;
+            box-shadow: inset -5px 0 20px rgba(0,0,0,0.2);
+        }
+
+        .sidebar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="20" cy="20" r="1" fill="rgba(255,255,255,0.05)"/><circle cx="80" cy="40" r="1" fill="rgba(255,255,255,0.05)"/><circle cx="40" cy="80" r="1" fill="rgba(255,255,255,0.05)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+            z-index: 1;
+        }
+
+        .sidebar > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .profile-section {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .profile-avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f59e0b, #f97316);
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            font-weight: 800;
+            color: white;
+            box-shadow: 0 15px 35px rgba(245, 158, 11, 0.4), 0 5px 15px rgba(0,0,0,0.3);
+            border: 3px solid rgba(255,255,255,0.1);
+        }
+
+        .profile-name {
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 5px;
+            background: linear-gradient(135deg, #f59e0b, #f97316);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
+        }
+
+        .profile-title {
+            font-size: 14px;
+            opacity: 0.85;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            color: #e2e8f0;
+        }
+
+        .contact-info {
+            margin-bottom: 25px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 12px;
+        }
+
+        .contact-icon {
+            width: 20px;
+            margin-right: 15px;
+            opacity: 0.8;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #f59e0b;
+            position: relative;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .skills-list {
+            margin-bottom: 20px;
+        }
+
+        .skill-item {
+            margin-bottom: 10px;
+        }
+
+        .skill-name {
+            font-size: 12px;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+
+        .skill-bar {
+            height: 4px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .skill-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #f59e0b, #f97316);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+            box-shadow: 0 1px 4px rgba(245, 158, 11, 0.3);
+        }
+
+        .qualities-list {
+            list-style: none;
+        }
+
+        .qualities-list li {
+            margin-bottom: 6px;
+            font-size: 12px;
+            position: relative;
+            padding-left: 16px;
+        }
+
+        .qualities-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #f59e0b;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .main-content {
+            padding: 25px;
+            background: #f8fafc;
+        }
+
+        .header {
+            margin-bottom: 25px;
+        }
+
+        .objective {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+            margin-bottom: 20px;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .objective h2 {
+            color: #0f172a;
+            margin-bottom: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+
+        .objective p {
+            color: #475569;
+            line-height: 1.6;
+            font-size: 13px;
+            font-weight: 400;
+        }
+
+        .content-section {
+            background: white;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+            overflow: hidden;
+            border: 1px solid rgba(15, 23, 42, 0.05);
+        }
+
+        .content-section h2 {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            color: white;
+            padding: 15px 20px;
+            margin: 0;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+
+        .content-section-body {
+            padding: 20px;
+        }
+
+        .experience-item, .education-item {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            position: relative;
+        }
+
+        .experience-item:last-child, .education-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .item-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 4px;
+            letter-spacing: -0.01em;
+        }
+
+        .item-company {
+            font-size: 13px;
+            color: #f59e0b;
+            font-weight: 600;
+        }
+
+        .item-date {
+            background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 11px;
+            color: #475569;
+            font-weight: 600;
+            border: 1px solid #e2e8f0;
+        }
+
+        .item-description ul {
+            margin: 8px 0;
+            padding-left: 16px;
+        }
+
+        .item-description li {
+            margin-bottom: 6px;
+            color: #475569;
+            line-height: 1.5;
+            font-size: 12px;
+            font-weight: 400;
+        }
+
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .tech-tag {
+            background: linear-gradient(135deg, #f59e0b, #f97316);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            box-shadow: 0 1px 4px rgba(245, 158, 11, 0.25);
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .skill-category {
+            background: #f1f5f9;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 3px solid #f59e0b;
+        }
+
+        .skill-category h3 {
+            color: #0f172a;
+            margin-bottom: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .skill-category p {
+            color: #475569;
+            font-size: 12px;
+            line-height: 1.4;
+            font-weight: 400;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                margin: 10px;
+            }
+            
+            .sidebar {
+                padding: 30px 20px;
+            }
+            
+            .main-content {
+                padding: 30px 20px;
+            }
+            
+            .item-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .item-date {
+                margin-top: 10px;
+            }
+        }
+
+        @media print {
+            body {
+                background: white !important;
+                padding: 0 !important;
+            }
+            
+            .container {
+                box-shadow: none !important;
+                max-width: none !important;
+                grid-template-columns: 240px 1fr !important;
+                border-radius: 0 !important;
+                margin: 0 !important;
+            }
+            
+            .sidebar {
+                background: #2d3748 !important;
+                -webkit-print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+            
+            .profile-avatar {
+                background: #f59e0b !important;
+                -webkit-print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+            
+            .section-title {
+                border-bottom-color: #f59e0b !important;
+                -webkit-print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+            
+            .skill-progress {
+                background: #f59e0b !important;
+                -webkit-print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+            
+            .tech-tag {
+                background: #f59e0b !important;
+                -webkit-print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+            
+            .content-section h2 {
+                background: #2d3748 !important;
+                -webkit-print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+            
+            .objective {
+                border-left-color: #f59e0b !important;
+                -webkit-print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+            
+            .skill-category {
+                border-left-color: #f59e0b !important;
+                -webkit-print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+            
+            * {
+                -webkit-print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+        }
+    </style>
 </head>
-<body class="w3-light-grey">
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="profile-section">
+                <div class="profile-avatar">SO</div>
+                <h1 class="profile-name">Salim Oujjet</h1>
+                <p class="profile-title">Développeur Web & Web Mobile</p>
+            </div>
 
-<!-- Page Container -->
-<div class="w3-content w3-margin-top" style="max-width:1400px;">
+            <div class="contact-info">
+                <div class="contact-item">
+                    <span class="contact-icon">📞</span>
+                    <span>06 15 98 04 38</span>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-icon">📧</span>
+                    <span>salim.ou83s@gmail.com</span>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-icon">📍</span>
+                    <span>Hyères (83400), France</span>
+                </div>
+            </div>
 
-  <!-- The Grid -->
-  <div class="w3-row-padding">
-  
-    <!-- Left Column -->
-    <div class="w3-third">
-    
-      <div class="w3-white w3-text-grey w3-card-4">
-        
-        <div class="w3-display-container">
-            
-         <img src="" style="width:100%" alt="">
-         <h2>Oujjet Salim</h2>
-          <div class="w3-display-bottomleft w3-container w3-text-black">
-            
-          </div>
-        </div>
-        <div class="w3-container">
-          <p><i class="fa fa-briefcase fa-fw w3-margin-right w3-large w3-text-teal"></i>Web Developer </p>
-          <p><i class="fa fa-home fa-fw w3-margin-right w3-large w3-text-teal"></i>Hyéres, FR</p>
-          <p><i class="fa fa-envelope fa-fw w3-margin-right w3-large w3-text-teal"></i>salim.ou83@gmail.com</p>
-          <p><i class="fa fa-phone fa-fw w3-margin-right w3-large w3-text-teal"></i>0615980438</p>
-          <hr>
+            <div class="skills-list">
+                <h3 class="section-title">Compétences Clés</h3>
+                <div class="skill-item">
+                    <div class="skill-name">Java / Spring Boot</div>
+                    <div class="skill-bar">
+                        <div class="skill-progress" style="width: 85%"></div>
+                    </div>
+                </div>
+                <div class="skill-item">
+                    <div class="skill-name">JavaScript / React</div>
+                    <div class="skill-bar">
+                        <div class="skill-progress" style="width: 80%"></div>
+                    </div>
+                </div>
+                <div class="skill-item">
+                    <div class="skill-name">PHP / Laravel</div>
+                    <div class="skill-bar">
+                        <div class="skill-progress" style="width: 75%"></div>
+                    </div>
+                </div>
+                <div class="skill-item">
+                    <div class="skill-name">C# / .NET</div>
+                    <div class="skill-bar">
+                        <div class="skill-progress" style="width: 70%"></div>
+                    </div>
+                </div>
+                <div class="skill-item">
+                    <div class="skill-name">Bases de données</div>
+                    <div class="skill-bar">
+                        <div class="skill-progress" style="width: 80%"></div>
+                    </div>
+                </div>
+            </div>
 
-          <p class="w3-large"><b><i class="fa fa-asterisk fa-fw w3-margin-right w3-text-teal"></i>Compétences</b></p>
-          <p>HTML CSS</p>
-          <div class=" w3-light-blue w3-round-xlarge w3-small">
-            <div class=" w3-container w3-blue-grey w3-center w3-round-xlarge w3-text-aqua " style="width:90%">90%</div>
-          </div>
-            <p>Javascript</p>
-          <div class="w3-light-grey w3-round-xlarge w3-small">
-            <div class="w3-container w3-center w3-round-xlarge w3-teal" style="width:90%">90%</div>
-          </div>
-          <p>React JS </p>
-          <div class=" w3-light-blue w3-round-xlarge w3-small">
-            <div class=" w3-container w3-blue-grey w3-center w3-round-xlarge w3-text-aqua " style="width:90%">90%</div>
-          </div>
-          <p>Node JS</p>
-          <div class="w3-light-grey w3-round-xlarge w3-small">  
-            <div class="w3-container w3-center w3-round-xlarge w3-teal" style="width:90%">90%</div>
-          </div>
-          <p>SQL</p>
-          <div class=" w3-light-blue w3-round-xlarge w3-small">
-            <div class=" w3-container w3-blue-grey w3-center w3-round-xlarge w3-text-aqua " style="width:90%">90%</div>
-          </div>
-          <p>Figma</p>
-          <div class="w3-light-grey w3-round-xlarge w3-small">
-            <div class="w3-container w3-center w3-round-xlarge w3-teal" style="width:90%">90%</div>
-          </div>
-          <p>Bootstrap </p>
-          <div class=" w3-light-blue w3-round-xlarge w3-small">
-            <div class=" w3-container w3-blue-grey w3-center w3-round-xlarge w3-text-aqua " style="width:90%">90%</div>
-          </div>
-          <p>Git</p>
-          <div class="w3-light-grey w3-round-xlarge w3-small">
-            <div class="w3-container w3-center w3-round-xlarge w3-teal" style="width:90%">90%</div>
-          </div>
-          <p>Github</p>
-          <div class=" w3-light-blue w3-round-xlarge w3-small">
-            <div class=" w3-container w3-blue-grey w3-center w3-round-xlarge w3-text-aqua " style="width:90%">90%</div>
-          </div>
-            <p>PHP</p>
-          <div class="w3-light-grey w3-round-xlarge w3-small">
-            <div class="w3-container w3-center w3-round-xlarge w3-teal" style="width:90%">90%</div>
-          </div>
-          <p>MySQL</p>
-          <div class=" w3-light-blue w3-round-xlarge w3-small">
-            <div class=" w3-container w3-blue-grey w3-center w3-round-xlarge w3-text-aqua " style="width:90%">90%</div>
-          </div>
-          <p>MongoDB</p>
-          <div class="w3-light-grey w3-round-xlarge w3-small">
-            <div class="w3-container w3-center w3-round-xlarge w3-teal" style="width:90%">90%</div>
-          </div>
-          <p>Laravel</p>
-          <div class=" w3-light-blue w3-round-xlarge w3-small">
-            <div class=" w3-container w3-blue-grey w3-center w3-round-xlarge w3-text-aqua " style="width:90%">90%</div>
-          </div>
-          <p>Wordpress</p>
-          <div class="w3-light-grey w3-round-xlarge w3-small">
-            <div class="w3-container w3-center w3-round-xlarge w3-teal" style="width:90%">90%</div>
-          </div>
-          
+            <div>
+                <h3 class="section-title">Qualités</h3>
+                <ul class="qualities-list">
+                    <li>Autodidacte</li>
+                    <li>Travail en équipe</li>
+                    <li>Autonome</li>
+                    <li>Polyvalent</li>
+                    <li>Bon relationnel</li>
+                </ul>
+            </div>
+        </aside>
 
-          <br>
+        <main class="main-content">
+            <div class="objective">
+                <h2>🎯 Objectif professionnel</h2>
+                <p>Développeur passionné, je souhaite intégrer une entreprise innovante où je pourrais participer activement à la conception d'applications performantes, évolutives et sécurisées. Je suis particulièrement motivé par le back-end, les projets e-commerce, les APIs, les architectures modernes (microservices) et l'apprentissage continu de nouvelles technologies.</p>
+            </div>
 
-          <p class="w3-large w3-text-theme"><b><i class="fa fa-globe fa-fw w3-margin-right w3-text-teal"></i>Languages</b></p>
-          <p>Français</p>
-          <div class="w3-light-grey w3-round-xlarge">
-            <div class="w3-round-xlarge w3-teal" style="height:24px;width:100%"></div>
-          </div>
-          <p>English</p>
-          <div class="w3-light-grey w3-round-xlarge">
-            <div class="w3-round-xlarge w3-teal" style="height:24px;width:30%"></div>
-          </div>
-          <p>Arabe</p>
-          <div class="w3-light-grey w3-round-xlarge">
-            <div class="w3-round-xlarge w3-teal" style="height:24px;width:100%"></div>
-          </div>
-         
-          <br>
-        </div>
-      </div><br>
+            <section class="content-section">
+                <h2>💼 Expériences professionnelles</h2>
+                <div class="content-section-body">
+                    <div class="experience-item">
+                        <div class="item-header">
+                            <div>
+                                <div class="item-title">Freelance - Développeur Web</div>
+                                <div class="item-company">Hyères - Remote</div>
+                            </div>
+                            <div class="item-date">Depuis 2022</div>
+                        </div>
+                        <div class="item-description">
+                            <ul>
+                                <li>Création de sites e-commerce avec WordPress & WooCommerce</li>
+                                <li>Développement personnalisé en PHP pour intégrations spécifiques</li>
+                                <li>Optimisation SEO, performance et responsive design</li>
+                                <li>Maintenance technique et accompagnement client</li>
+                            </ul>
+                            <div class="tech-tags">
+                                <span class="tech-tag">WordPress</span>
+                                <span class="tech-tag">WooCommerce</span>
+                                <span class="tech-tag">PHP</span>
+                                <span class="tech-tag">SEO</span>
+                            </div>
+                        </div>
+                    </div>
 
-    <!-- End Left Column -->
+                    <div class="experience-item">
+                        <div class="item-header">
+                            <div>
+                                <div class="item-title">Stagiaire Développeur - Projet réseau (Go)</div>
+                                <div class="item-company">La Plateforme_ Toulon</div>
+                            </div>
+                            <div class="item-date">Juin 2025</div>
+                        </div>
+                        <div class="item-description">
+                            <ul>
+                                <li>Développement d'une application de partage de fichiers entre étudiants</li>
+                                <li>Apprentissage des bases du langage Go : syntaxe, gestion des paquets, fonctions</li>
+                                <li>Programmation réseau en Go : gestion des sockets, protocole TCP/IP</li>
+                                <li>Travail collaboratif sur GitHub, documentation technique</li>
+                            </ul>
+                            <div class="tech-tags">
+                                <span class="tech-tag">Go</span>
+                                <span class="tech-tag">TCP/IP</span>
+                                <span class="tech-tag">GitHub</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="experience-item">
+                        <div class="item-header">
+                            <div>
+                                <div class="item-title">Stagiaire Développeur Web & Mobile</div>
+                                <div class="item-company">Agence web</div>
+                            </div>
+                            <div class="item-date">2021</div>
+                        </div>
+                        <div class="item-description">
+                            <ul>
+                                <li>Participation à une application mobile hybride (front et back)</li>
+                                <li>Intégration HTML/CSS, développement PHP/MySQL</li>
+                                <li>Réalisation de tests utilisateurs, corrections de bugs, mise en production</li>
+                            </ul>
+                            <div class="tech-tags">
+                                <span class="tech-tag">HTML/CSS</span>
+                                <span class="tech-tag">PHP</span>
+                                <span class="tech-tag">MySQL</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>🎓 Formations</h2>
+                <div class="content-section-body">
+                    <div class="education-item">
+                        <div class="item-header">
+                            <div>
+                                <div class="item-title">Concepteur Développeur d'Applications (CDA)</div>
+                                <div class="item-company">La Plateforme_ Toulon</div>
+                            </div>
+                            <div class="item-date">2024 - 2025</div>
+                        </div>
+                        <div class="item-description">
+                            <ul>
+                                <li>Développement Java/Spring Boot et microservices</li>
+                                <li>Conception logicielle, architecture MVC, API REST</li>
+                                <li>Introduction au cloud et à Docker</li>
+                                <li>Projet d'application pédagogique en équipe (partage de cours et fichiers)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="education-item">
+                        <div class="item-header">
+                            <div>
+                                <div class="item-title">Formation autodidacte - Développement C#/.NET</div>
+                                <div class="item-company">En ligne / personnel</div>
+                            </div>
+                            <div class="item-date">2022</div>
+                        </div>
+                        <div class="item-description">
+                            <ul>
+                                <li>Apprentissage du langage C# : syntaxe, classes, objets, héritage, encapsulation</li>
+                                <li>Framework ASP.NET MVC : contrôleurs, vues Razor, routage, sécurité</li>
+                                <li>Projet e-commerce : catalogue produit, panier, paiement, gestion utilisateurs</li>
+                                <li>Entity Framework, SQL Server, authentification avec Identity</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="education-item">
+                        <div class="item-header">
+                            <div>
+                                <div class="item-title">Développeur Web et Web Mobile</div>
+                                <div class="item-company">AFPA</div>
+                            </div>
+                            <div class="item-date">Nov 2020 - Août 2021</div>
+                        </div>
+                        <div class="item-description">
+                            <ul>
+                                <li>Développement web full-stack (PHP, JavaScript, HTML, CSS)</li>
+                                <li>Initiation à React.js et TypeScript</li>
+                                <li>Introduction au framework Laravel pour le développement back-end</li>
+                                <li>Conception de bases de données relationnelles (MySQL), intégration web</li>
+                                <li>Réalisation de projets e-commerce complets avec CMS (WordPress, WooCommerce)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <h2>🧠 Compétences techniques</h2>
+                <div class="content-section-body">
+                    <div class="skills-grid">
+                        <div class="skill-category">
+                            <h3>Langages</h3>
+                            <p>Java, JavaScript, PHP, Go, C#, Python (bases), TypeScript</p>
+                        </div>
+                        <div class="skill-category">
+                            <h3>Frameworks</h3>
+                            <p>Spring Boot, .NET, Laravel, Bootstrap, React, ASP.NET</p>
+                        </div>
+                        <div class="skill-category">
+                            <h3>Front-end</h3>
+                            <p>HTML5, CSS3, JavaScript, React, TypeScript</p>
+                        </div>
+                        <div class="skill-category">
+                            <h3>Back-end</h3>
+                            <p>Java Spring Boot, PHP, Laravel, .NET (C#)</p>
+                        </div>
+                        <div class="skill-category">
+                            <h3>Bases de données</h3>
+                            <p>MySQL, Microsoft SQL, SQLite, MongoDB</p>
+                        </div>
+                        <div class="skill-category">
+                            <h3>Outils & DevOps</h3>
+                            <p>GitHub, Trello, Figma, Docker (bases), API REST, architecture microservices</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
     </div>
-
-    <!-- Right Column -->
-    <div class="w3-twothird">
-        <div class="w3-container w3-card w3-white w3-margin-bottom">
-            <h2 class="w3-text-gray w3-padding-16"><i class="fa fa-code  fa-fw w3-margin-right w3-xxlarge w3-text-teal"></i>Developer Full stack </h2>
-            <h6 class="w3-text-gray">Passionné de codage depuis 5 ans
-                d'apprentissage autodidacte , j’ai intègre une
-                formation Développeur web et web mobile au
-                centre de formation AFPA afin de me
-                professionnaliser et d'en faire mon métier</h6>
-        </div>
-    
-      <div class="w3-container w3-card w3-white w3-margin-bottom">
-        <h2 class="w3-text-grey w3-padding-16"><i class="fa fa-suitcase fa-fw w3-margin-right w3-xxlarge w3-text-teal"></i> Experience</h2>
-        <div class="w3-container">
-          <h5 class="w3-opacity"><b>Front End Developer </b></h5>
-          <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Jan 2022 - Oct 2022<span class="w3-tag w3-teal w3-round"></span></h6>
-          <p>Développement de l'interface utilisateur</p>
-          <p>Analyse des besoins exprimés sur cahier des charges</p>
-          <p>Écriture de programmes</p>
-          <p>Développement de fonctionnalités d'administration</p>
-          <p>Maintenance du site</p>
-          <p> créer des pages web interactives et réactives</p>
-          <p> créer des sites statiques et dynamiques</p>
-          <p>Intégration de l'interface utilisateur</p>
-          <hr>
-        </div>
-        <div class="w3-container">
-            <h5 class="w3-opacity"><b>Employe libre service / GIFI </b></h5>
-            <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Jun 2022 - Mar 2023</h6>
-             <p> Réceptionner un produit</p>
-             <p> Mettre en rayon et valoriser </p>
-             <p> Enregister le vente d'un produit </p>
-             <p> Gérer les demandes d'achat </p>
-             <p> Gérer les demandes de vente </p>
-             <hr>
-            <br>
-          </div>
-
-
-          <div class="w3-container">
-            <h5 class="w3-opacity"><b>Employe libre service / LEADER PRICE </b></h5>
-            <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Mai 2018 - Mar 2018</h6>
-            <p> Gérer les demandes d'achat </p>
-            <p> Gérer les demandes de vente </p>
-            <p> Réceptionner un produit</p>
-            <p> Mettre en rayon et valoriser </p>
-
-            <br>
-          </div>
-        </div>
-      <div class="w3-container w3-card w3-white">
-        <h2 class="w3-text-grey w3-padding-16"><i class="fa fa-certificate fa-fw w3-margin-right w3-xxlarge w3-text-teal"></i>Education</h2>
-        <div class="w3-container">
-          <h5 class="w3-opacity"><b>Developpeur web et Mobile : Autoformation </b></h5>
-          <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>2021 - 2022</h6>
-          <p> Auto formation : Web Development</p>
-          <p> Les base de C# v : 10 </p>
-          <p> Les base de C# concepte de POO </p>
-          <p> Réaliser site web dynamique : dotnet </p>
-          <p>Concevoire une base de données </p>
-          <hr>
-        </div>
-        <div class="w3-container">
-          <h5 class="w3-opacity"><b>Developpeur web et Mobile : AFPA</b></h5>
-          <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>2021 - 2022</h6>
-          <p> Les base des WEB : Html Css JS  </p>
-          <p> Réaliser site web static : Html Css JS </p>
-          <p> Réaliser site web static : React JS</p>
-          <p> Réaliser Maquette site web : Figma  </p>
-          <p> Réaliser site web dynamique : PHP </p>
-          <p> Développer application client server </p>
-          <p> Développer API : Node js </p>
-          <p> Concevoire une base de données : Mysql</p>
-          <hr>
-        </div>
-        <div class="w3-container">
-          <h5 class="w3-opacity"><b>Employe Libre service : IFAP </b></h5>
-          <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>2018 - 2019</h6>
-          <p>Centre de formation : IFAP </p>
-          <p>La gestion des stocks</p>
-          <p>renseigner les clients</p>
-          <p>mettre en rayon les différents produits</p>
-          <p>contrôler le balisage, l’affichage et l’étiquetage des prix et des promotions</p>
-          <p>veiller à ce que le rayonnage reste propre et bien agencé </p>
-          <p>réceptionner les livraisons des fournisseurs</p>
-          <p>vérifier la conformité des arrivages </p>
-          <p>transportant les articles de la réserve au magasin</p>
-        </div>
-      </div>
-
-    <!-- End Right Column -->
-    </div>
-    
-    
-  <!-- End Grid -->
-  </div>
-  
-  <!-- End Page Container -->
-</div>
-
-<footer class="w3-container w3-teal w3-center w3-margin-top">
-  <p>Retrouvez-moi sur les réseaux sociaux</p>
-  <i class="fa fa-facebook-official w3-hover-opacity"></i>
-  <i class="fa fa-instagram w3-hover-opacity"></i>
-  <i class="fa fa-snapchat w3-hover-opacity"></i>
-  <i class="fa fa-pinterest-p w3-hover-opacity"></i>
-  <i class="fa fa-twitter w3-hover-opacity"></i>
-  <i class="fa fa-linkedin w3-hover-opacity"></i>
-  <p>Powered by salim</a></p>
-</footer>
-
 </body>
 </html>
