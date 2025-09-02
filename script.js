@@ -307,66 +307,167 @@ function initSmoothScrolling() {
     });
 }
 
-// Enhanced Local Visitor Counter
+// Enhanced Local Visitor Counter with unique visitor detection
 function initVisitorCounter() {
-    trackVisitorLocally();
+    trackUniqueVisitor();
     displayVisitorStats();
 }
 
-function trackVisitorLocally() {
+function trackUniqueVisitor() {
     try {
         const now = new Date();
         const today = now.toDateString();
         const visitTime = now.toISOString();
         
-        // Generate unique session ID
-        const sessionId = generateSessionId();
+        // Create a unique fingerprint for the visitor
+        const fingerprint = generateVisitorFingerprint();
         
-        // Track total visitors
+        // Check if this is a unique visitor today
+        const dailyVisitorsKey = `dailyVisitors_${today}`;
+        const todayVisitors = JSON.parse(localStorage.getItem(dailyVisitorsKey) || '[]');
+        
+        // Check if visitor already visited today (within 30 minutes)
+        const thirtyMinutesAgo = new Date(now.getTime() - 30 * 60 * 1000);
+        const recentVisit = todayVisitors.find(visitor => 
+            visitor.fingerprint === fingerprint && 
+            new Date(visitor.lastVisit) > thirtyMinutesAgo
+        );
+        
         let totalVisitors = parseInt(localStorage.getItem('totalVisitors') || '0');
-        totalVisitors++;
-        localStorage.setItem('totalVisitors', totalVisitors.toString());
+        let dailyVisitors = todayVisitors.length;
         
-        // Track daily visitors
-        const dailyKey = `dailyVisitors_${today}`;
-        let dailyVisitors = parseInt(localStorage.getItem(dailyKey) || '0');
-        dailyVisitors++;
-        localStorage.setItem(dailyKey, dailyVisitors.toString());
+        if (!recentVisit) {
+            // New unique visitor or returning after 30+ minutes
+            totalVisitors++;
+            localStorage.setItem('totalVisitors', totalVisitors.toString());
+            
+            // Add or update visitor in today's list
+            const existingVisitorIndex = todayVisitors.findIndex(v => v.fingerprint === fingerprint);
+            if (existingVisitorIndex >= 0) {
+                // Update existing visitor's last visit time
+                todayVisitors[existingVisitorIndex].lastVisit = visitTime;
+                todayVisitors[existingVisitorIndex].visitCount++;
+            } else {
+                // New visitor today
+                dailyVisitors++;
+                todayVisitors.push({
+                    fingerprint: fingerprint,
+                    firstVisit: visitTime,
+                    lastVisit: visitTime,
+                    visitCount: 1
+                });
+            }
+            
+            localStorage.setItem(dailyVisitorsKey, JSON.stringify(todayVisitors));
+            
+            console.log(`👤 Visiteur unique total n°${totalVisitors}`);
+            console.log(`📅 Visiteur unique du jour n°${dailyVisitors}`);
+        } else {
+            // Same visitor within 30 minutes - don't count as new visit
+            console.log(`🔄 Visiteur déjà compté (dernière visite: ${new Date(recentVisit.lastVisit).toLocaleTimeString()})`);
+            console.log(`👤 Total visiteurs: ${totalVisitors}`);
+            console.log(`📅 Visiteurs du jour: ${dailyVisitors}`);
+        }
+        
+        // Generate session ID for current session
+        const sessionId = generateSessionId();
         
         // Track session data
         const sessionData = {
             sessionId: sessionId,
+            fingerprint: fingerprint,
             timestamp: visitTime,
             screen: `${screen.width}x${screen.height}`,
             userAgent: navigator.userAgent.substring(0, 100),
             referrer: document.referrer || 'Direct',
             language: navigator.language,
-            platform: navigator.platform
+            platform: navigator.platform,
+            isUniqueVisit: !recentVisit
         };
         
         sessionStorage.setItem('currentSession', JSON.stringify(sessionData));
-        
-        // Store visit history (last 10 visits)
-        let visitHistory = JSON.parse(localStorage.getItem('visitHistory') || '[]');
-        visitHistory.unshift({
-            date: visitTime,
-            sessionId: sessionId
-        });
-        
-        // Keep only last 10 visits
-        visitHistory = visitHistory.slice(0, 10);
-        localStorage.setItem('visitHistory', JSON.stringify(visitHistory));
-        
-        console.log(`👤 Visiteur total n°${totalVisitors}`);
-        console.log(`📅 Visiteur du jour n°${dailyVisitors}`);
         console.log(`🔗 Session: ${sessionId}`);
+        
+        // Store visit history (only unique visits)
+        if (!recentVisit) {
+            let visitHistory = JSON.parse(localStorage.getItem('visitHistory') || '[]');
+            visitHistory.unshift({
+                date: visitTime,
+                sessionId: sessionId,
+                fingerprint: fingerprint
+            });
+            
+            // Keep only last 20 visits
+            visitHistory = visitHistory.slice(0, 20);
+            localStorage.setItem('visitHistory', JSON.stringify(visitHistory));
+        }
         
         // Clean old daily counters (keep only last 30 days)
         cleanOldDailyCounters();
         
     } catch (error) {
-        console.log('Erreur de tracking local:', error);
+        console.log('Erreur de tracking unique:', error);
     }
+}
+
+function generateVisitorFingerprint() {
+    // Create a semi-unique fingerprint based on browser characteristics
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    ctx.textBaseline = 'top';
+    ctx.font = '14px Arial';
+    ctx.fillText('Browser fingerprint', 2, 2);
+    
+    const fingerprint = btoa([
+        navigator.userAgent,
+        navigator.language,
+        screen.width + 'x' + screen.height,
+        screen.colorDepth,
+        new Date().getTimezoneOffset(),
+        navigator.platform,
+        navigator.hardwareConcurrency || 'unknown',
+        canvas.toDataURL().slice(0, 50) // Canvas fingerprint (partial)
+    ].join('|')).slice(0, 32);
+    
+    return fingerprint;
+}
+
+function getVisitorStats() {
+    const totalVisitors = parseInt(localStorage.getItem('totalVisitors') || '0');
+    const today = new Date().toDateString();
+    const dailyKey = `dailyVisitors_${today}`;
+    const todayVisitors = JSON.parse(localStorage.getItem(dailyKey) || '[]');
+    const dailyCount = todayVisitors.length;
+    
+    const sessionData = JSON.parse(sessionStorage.getItem('currentSession') || '{}');
+    const visitHistory = JSON.parse(localStorage.getItem('visitHistory') || '[]');
+    
+    // Get section views
+    const sectionStats = {};
+    Object.keys(localStorage).forEach(key => {
+        if (key.startsWith('section_')) {
+            const sectionName = key.replace('section_', '');
+            sectionStats[sectionName] = parseInt(localStorage.getItem(key) || '0');
+        }
+    });
+    
+    // Calculate returning visitors
+    const returningVisitors = todayVisitors.filter(v => v.visitCount > 1).length;
+    
+    return {
+        total: totalVisitors,
+        today: dailyCount,
+        todayReturning: returningVisitors,
+        session: sessionData,
+        visitHistory: visitHistory,
+        sectionViews: sectionStats,
+        todayDetails: todayVisitors.map(v => ({
+            visits: v.visitCount,
+            firstVisit: new Date(v.firstVisit).toLocaleTimeString(),
+            lastVisit: new Date(v.lastVisit).toLocaleTimeString()
+        })),
+        timestamp: new Date().toISOString()
+    };
 }
 
 function generateSessionId() {
@@ -392,57 +493,21 @@ function cleanOldDailyCounters() {
 function trackSectionView(sectionId) {
     if (!sectionId) return;
     
+    // Only track if section hasn't been viewed in this session
+    const sessionViews = JSON.parse(sessionStorage.getItem('sectionViews') || '[]');
+    if (sessionViews.includes(sectionId)) {
+        return; // Already tracked in this session
+    }
+    
+    sessionViews.push(sectionId);
+    sessionStorage.setItem('sectionViews', JSON.stringify(sessionViews));
+    
     const sectionKey = `section_${sectionId}`;
     let sectionViews = parseInt(localStorage.getItem(sectionKey) || '0');
     sectionViews++;
     localStorage.setItem(sectionKey, sectionViews.toString());
     
     console.log(`👁️ Section "${sectionId}" vue ${sectionViews} fois`);
-}
-
-function getVisitorStats() {
-    const totalVisitors = parseInt(localStorage.getItem('totalVisitors') || '0');
-    const today = new Date().toDateString();
-    const dailyKey = `dailyVisitors_${today}`;
-    const dailyVisitors = parseInt(localStorage.getItem(dailyKey) || '0');
-    
-    const sessionData = JSON.parse(sessionStorage.getItem('currentSession') || '{}');
-    const visitHistory = JSON.parse(localStorage.getItem('visitHistory') || '[]');
-    
-    // Get section views
-    const sectionStats = {};
-    Object.keys(localStorage).forEach(key => {
-        if (key.startsWith('section_')) {
-            const sectionName = key.replace('section_', '');
-            sectionStats[sectionName] = parseInt(localStorage.getItem(key) || '0');
-        }
-    });
-    
-    return {
-        total: totalVisitors,
-        today: dailyVisitors,
-        session: sessionData,
-        visitHistory: visitHistory,
-        sectionViews: sectionStats,
-        timestamp: new Date().toISOString()
-    };
-}
-
-function displayVisitorStats() {
-    setTimeout(() => {
-        const stats = getVisitorStats();
-        
-        console.group('📊 Statistiques détaillées');
-        console.log('Total visiteurs:', stats.total);
-        console.log('Aujourd\'hui:', stats.today);
-        console.log('Session actuelle:', stats.session.sessionId);
-        console.log('Écran:', stats.session.screen);
-        console.log('Plateforme:', stats.session.platform);
-        console.log('Langue:', stats.session.language);
-        console.log('Sections les plus vues:', stats.sectionViews);
-        console.log('Historique des visites:', stats.visitHistory.length, 'dernières visites');
-        console.groupEnd();
-    }, 2000);
 }
 
 // Utility functions
