@@ -4,669 +4,407 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CV - Salim Oujjet</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            line-height: 1.7;
-            color: #1a202c;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            overflow: hidden;
-            display: grid;
-            grid-template-columns: 280px 1fr;
-            min-height: auto;
-        }
-
-        .sidebar {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            color: white;
-            padding: 25px 20px;
-            position: relative;
-            box-shadow: inset -5px 0 20px rgba(0,0,0,0.2);
-        }
-
-        .sidebar::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 100%;
-            height: 100%;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="20" cy="20" r="1" fill="rgba(255,255,255,0.05)"/><circle cx="80" cy="40" r="1" fill="rgba(255,255,255,0.05)"/><circle cx="40" cy="80" r="1" fill="rgba(255,255,255,0.05)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-            opacity: 0.3;
-            z-index: 1;
-        }
-
-        .sidebar > * {
-            position: relative;
-            z-index: 2;
-        }
-
-        .profile-section {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        .profile-avatar {
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #f59e0b, #f97316);
-            margin: 0 auto 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 36px;
-            font-weight: 800;
-            color: white;
-            box-shadow: 0 15px 35px rgba(245, 158, 11, 0.4), 0 5px 15px rgba(0,0,0,0.3);
-            border: 3px solid rgba(255,255,255,0.1);
-        }
-
-        .profile-name {
-            font-size: 22px;
-            font-weight: 800;
-            margin-bottom: 5px;
-            background: linear-gradient(135deg, #f59e0b, #f97316);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: -0.02em;
-        }
-
-        .profile-title {
-            font-size: 14px;
-            opacity: 0.85;
-            font-weight: 400;
-            letter-spacing: 0.5px;
-            color: #e2e8f0;
-        }
-
-        .contact-info {
-            margin-bottom: 25px;
-        }
-
-        .contact-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-            font-size: 12px;
-        }
-
-        .contact-icon {
-            width: 20px;
-            margin-right: 15px;
-            opacity: 0.8;
-        }
-
-        .section-title {
-            font-size: 14px;
-            font-weight: 700;
-            margin-bottom: 15px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid #f59e0b;
-            position: relative;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-        }
-
-        .skills-list {
-            margin-bottom: 20px;
-        }
-
-        .skill-item {
-            margin-bottom: 10px;
-        }
-
-        .skill-name {
-            font-size: 12px;
-            margin-bottom: 4px;
-            font-weight: 500;
-        }
-
-        .skill-bar {
-            height: 4px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 2px;
-            overflow: hidden;
-        }
-
-        .skill-progress {
-            height: 100%;
-            background: linear-gradient(90deg, #f59e0b, #f97316);
-            border-radius: 2px;
-            transition: width 0.3s ease;
-            box-shadow: 0 1px 4px rgba(245, 158, 11, 0.3);
-        }
-
-        .qualities-list {
-            list-style: none;
-        }
-
-        .qualities-list li {
-            margin-bottom: 6px;
-            font-size: 12px;
-            position: relative;
-            padding-left: 16px;
-        }
-
-        .qualities-list li::before {
-            content: '✓';
-            position: absolute;
-            left: 0;
-            color: #f59e0b;
-            font-weight: bold;
-            font-size: 16px;
-        }
-
-        .main-content {
-            padding: 25px;
-            background: #f8fafc;
-        }
-
-        .header {
-            margin-bottom: 25px;
-        }
-
-        .objective {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
-            margin-bottom: 20px;
-            border-left: 4px solid #f59e0b;
-        }
-
-        .objective h2 {
-            color: #0f172a;
-            margin-bottom: 12px;
-            font-size: 18px;
-            font-weight: 700;
-            letter-spacing: -0.01em;
-        }
-
-        .objective p {
-            color: #475569;
-            line-height: 1.6;
-            font-size: 13px;
-            font-weight: 400;
-        }
-
-        .content-section {
-            background: white;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
-            overflow: hidden;
-            border: 1px solid rgba(15, 23, 42, 0.05);
-        }
-
-        .content-section h2 {
-            background: linear-gradient(135deg, #0f172a, #1e293b);
-            color: white;
-            padding: 15px 20px;
-            margin: 0;
-            font-size: 16px;
-            font-weight: 700;
-            letter-spacing: 0.3px;
-        }
-
-        .content-section-body {
-            padding: 20px;
-        }
-
-        .experience-item, .education-item {
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #eee;
-            position: relative;
-        }
-
-        .experience-item:last-child, .education-item:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-        }
-
-        .item-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 10px;
-        }
-
-        .item-title {
-            font-size: 15px;
-            font-weight: 700;
-            color: #0f172a;
-            margin-bottom: 4px;
-            letter-spacing: -0.01em;
-        }
-
-        .item-company {
-            font-size: 13px;
-            color: #f59e0b;
-            font-weight: 600;
-        }
-
-        .item-date {
-            background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
-            padding: 6px 12px;
-            border-radius: 15px;
-            font-size: 11px;
-            color: #475569;
-            font-weight: 600;
-            border: 1px solid #e2e8f0;
-        }
-
-        .item-description ul {
-            margin: 8px 0;
-            padding-left: 16px;
-        }
-
-        .item-description li {
-            margin-bottom: 6px;
-            color: #475569;
-            line-height: 1.5;
-            font-size: 12px;
-            font-weight: 400;
-        }
-
-        .tech-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-top: 10px;
-        }
-
-        .tech-tag {
-            background: linear-gradient(135deg, #f59e0b, #f97316);
-            color: white;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 10px;
-            font-weight: 600;
-            box-shadow: 0 1px 4px rgba(245, 158, 11, 0.25);
-        }
-
-        .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-        }
-
-        .skill-category {
-            background: #f1f5f9;
-            padding: 15px;
-            border-radius: 6px;
-            border-left: 3px solid #f59e0b;
-        }
-
-        .skill-category h3 {
-            color: #0f172a;
-            margin-bottom: 10px;
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-        }
-
-        .skill-category p {
-            color: #475569;
-            font-size: 12px;
-            line-height: 1.4;
-            font-weight: 400;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                grid-template-columns: 1fr;
-                margin: 10px;
-            }
-            
-            .sidebar {
-                padding: 30px 20px;
-            }
-            
-            .main-content {
-                padding: 30px 20px;
-            }
-            
-            .item-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .item-date {
-                margin-top: 10px;
-            }
-        }
-
-        @media print {
-            body {
-                background: white !important;
-                padding: 0 !important;
-            }
-            
-            .container {
-                box-shadow: none !important;
-                max-width: none !important;
-                grid-template-columns: 240px 1fr !important;
-                border-radius: 0 !important;
-                margin: 0 !important;
-            }
-            
-            .sidebar {
-                background: #2d3748 !important;
-                -webkit-print-color-adjust: exact !important;
-                color-adjust: exact !important;
-            }
-            
-            .profile-avatar {
-                background: #f59e0b !important;
-                -webkit-print-color-adjust: exact !important;
-                color-adjust: exact !important;
-            }
-            
-            .section-title {
-                border-bottom-color: #f59e0b !important;
-                -webkit-print-color-adjust: exact !important;
-                color-adjust: exact !important;
-            }
-            
-            .skill-progress {
-                background: #f59e0b !important;
-                -webkit-print-color-adjust: exact !important;
-                color-adjust: exact !important;
-            }
-            
-            .tech-tag {
-                background: #f59e0b !important;
-                -webkit-print-color-adjust: exact !important;
-                color-adjust: exact !important;
-            }
-            
-            .content-section h2 {
-                background: #2d3748 !important;
-                -webkit-print-color-adjust: exact !important;
-                color-adjust: exact !important;
-            }
-            
-            .objective {
-                border-left-color: #f59e0b !important;
-                -webkit-print-color-adjust: exact !important;
-                color-adjust: exact !important;
-            }
-            
-            .skill-category {
-                border-left-color: #f59e0b !important;
-                -webkit-print-color-adjust: exact !important;
-                color-adjust: exact !important;
-            }
-            
-            * {
-                -webkit-print-color-adjust: exact !important;
-                color-adjust: exact !important;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Particle Background -->
+    <div id="particles"></div>
+    
+    <!-- Navigation -->
+    <nav class="nav-menu">
+        <div class="nav-toggle" id="navToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#home">Accueil</a></li>
+            <li><a href="#about">À propos</a></li>
+            <li><a href="#experience">Expérience</a></li>
+            <li><a href="#formation">Formation</a></li>
+            <li><a href="#skills">Compétences</a></li>
+            <li><a href="#projects">Projets</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Container -->
     <div class="container">
-        <aside class="sidebar">
-            <div class="profile-section">
-                <div class="profile-avatar">SO</div>
-                <h1 class="profile-name">Salim Oujjet</h1>
-                <p class="profile-title">Développeur Web & Web Mobile</p>
-            </div>
-
-            <div class="contact-info">
-                <div class="contact-item">
-                    <span class="contact-icon">📞</span>
-                    <span>06 15 98 04 38</span>
-                </div>
-                <div class="contact-item">
-                    <span class="contact-icon">📧</span>
-                    <span>salim.ou83s@gmail.com</span>
-                </div>
-                <div class="contact-item">
-                    <span class="contact-icon">📍</span>
-                    <span>Hyères (83400), France</span>
-                </div>
-            </div>
-
-            <div class="skills-list">
-                <h3 class="section-title">Compétences Clés</h3>
-                <div class="skill-item">
-                    <div class="skill-name">Java / Spring Boot</div>
-                    <div class="skill-bar">
-                        <div class="skill-progress" style="width: 85%"></div>
+        <!-- Hero Section -->
+        <section id="home" class="hero-section">
+            <div class="hero-content">
+                <div class="profile-card">
+                    <div class="profile-avatar">
+                        <span class="avatar-text">SO</span>
+                        <div class="status-indicator"></div>
                     </div>
-                </div>
-                <div class="skill-item">
-                    <div class="skill-name">JavaScript / React</div>
-                    <div class="skill-bar">
-                        <div class="skill-progress" style="width: 80%"></div>
-                    </div>
-                </div>
-                <div class="skill-item">
-                    <div class="skill-name">PHP / Laravel</div>
-                    <div class="skill-bar">
-                        <div class="skill-progress" style="width: 75%"></div>
-                    </div>
-                </div>
-                <div class="skill-item">
-                    <div class="skill-name">C# / .NET</div>
-                    <div class="skill-bar">
-                        <div class="skill-progress" style="width: 70%"></div>
-                    </div>
-                </div>
-                <div class="skill-item">
-                    <div class="skill-name">Bases de données</div>
-                    <div class="skill-bar">
-                        <div class="skill-progress" style="width: 80%"></div>
+                    <h1 class="profile-name">Salim Oujjet</h1>
+                    <p class="profile-title typing-text">Développeur Full-Stack</p>
+                    <div class="social-links">
+                        <a href="mailto:salim.ou83s@gmail.com" class="social-link">
+                            <i class="icon-email">📧</i>
+                        </a>
+                        <a href="https://github.com/salim-ou" class="social-link">
+                            <i class="icon-github">💻</i>
+                        </a>
+                        <a href="tel:0615980438" class="social-link">
+                            <i class="icon-phone">📞</i>
+                        </a>
                     </div>
                 </div>
             </div>
+        </section>
 
-            <div>
-                <h3 class="section-title">Qualités</h3>
-                <ul class="qualities-list">
-                    <li>Autodidacte</li>
-                    <li>Travail en équipe</li>
-                    <li>Autonome</li>
-                    <li>Polyvalent</li>
-                    <li>Bon relationnel</li>
-                </ul>
+        <!-- About Section -->
+        <section id="about" class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">À propos</h2>
+                <div class="section-line"></div>
             </div>
-        </aside>
-
-        <main class="main-content">
-            <div class="objective">
-                <h2>🎯 Objectif professionnel</h2>
-                <p>Développeur passionné, je souhaite intégrer une entreprise innovante où je pourrais participer activement à la conception d'applications performantes, évolutives et sécurisées. Je suis particulièrement motivé par le back-end, les projets e-commerce, les APIs, les architectures modernes (microservices) et l'apprentissage continu de nouvelles technologies.</p>
+            <div class="about-content">
+                <div class="about-text">
+                    <p class="lead">Développeur Full-Stack passionné avec 4+ années d'expérience, spécialisé dans le développement d'APIs et les systèmes embarqués.</p>
+                    <p>Expert en Java/Spring Boot, PHP/Laravel et programmation réseau (Go). Recherche activement un poste en CDI ou alternance dans une entreprise innovante pour contribuer à la conception d'applications performantes, évolutives et sécurisées.</p>
+                    <div class="specializations">
+                        <h3>Spécialisations :</h3>
+                        <div class="spec-tags">
+                            <span class="spec-tag">APIs REST</span>
+                            <span class="spec-tag">Systèmes embarqués</span>
+                            <span class="spec-tag">Programmation réseau</span>
+                            <span class="spec-tag">Microservices</span>
+                            <span class="spec-tag">Optimisation des performances</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-stats">
+                    <div class="stat-card">
+                        <span class="stat-number">4+</span>
+                        <span class="stat-label">Années d'expérience</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">15+</span>
+                        <span class="stat-label">Sites créés</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">7</span>
+                        <span class="stat-label">Technologies maîtrisées</span>
+                    </div>
+                </div>
             </div>
+        </section>
 
-            <section class="content-section">
-                <h2>💼 Expériences professionnelles</h2>
-                <div class="content-section-body">
-                                        <div class="experience-item">
-                        <div class="item-header">
-                            <div>
-                                <div class="item-title">Stagiaire Développeur - Projet réseau (Go)</div>
-                                <div class="item-company">La Plateforme_ Toulon</div>
-                            </div>
-                            <div class="item-date">Juin 2025</div>
+        <!-- Experience Section -->
+        <section id="experience" class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">Expérience Professionnelle</h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-header">
+                            <h3>Stagiaire Développeur</h3>
+                            <span class="timeline-date">Juin 2025</span>
                         </div>
-                        <div class="item-description">
-                            <ul>
-                                <li>Développement d'une application de partage de fichiers entre étudiants</li>
-                                <li>Apprentissage des bases du langage Go : syntaxe, gestion des paquets, fonctions</li>
-                                <li>Programmation réseau en Go : gestion des sockets, protocole TCP/IP</li>
-                                <li>Travail collaboratif sur GitHub, documentation technique</li>
-                            </ul>
-                            <div class="tech-tags">
-                                <span class="tech-tag">Go</span>
-                                <span class="tech-tag">TCP/IP</span>
-                                <span class="tech-tag">GitHub</span>
-                            </div>
+                        <h4 class="timeline-company">La Plateforme_ Toulon</h4>
+                        <p class="timeline-subtitle">Développement d'une application de partage de fichiers réseau</p>
+                        <ul class="timeline-description">
+                            <li>Développement en langage Go d'une application de partage de fichiers entre étudiants</li>
+                            <li>Programmation réseau : gestion des sockets TCP/IP, protocoles de communication</li>
+                            <li>Implémentation de fonctionnalités de sécurité et de gestion des permissions</li>
+                            <li>Travail collaboratif sur GitHub avec documentation technique complète</li>
+                            <li>Tests unitaires et optimisation des performances réseau</li>
+                        </ul>
+                        <div class="tech-stack">
+                            <span class="tech-tag">Go</span>
+                            <span class="tech-tag">TCP/IP</span>
+                            <span class="tech-tag">GitHub</span>
+                            <span class="tech-tag">Tests unitaires</span>
                         </div>
                     </div>
-                    <div class="experience-item">
-                        <div class="item-header">
-                            <div>
-                                <div class="item-title">Freelance - Développeur Web</div>
-                                <div class="item-company">Hyères - Remote</div>
-                            </div>
-                            <div class="item-date">Depuis 2022</div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-header">
+                            <h3>Développeur Web Freelance</h3>
+                            <span class="timeline-date">2022-2024</span>
                         </div>
-                        <div class="item-description">
-                            <ul>
-                                <li>Création de sites e-commerce avec WordPress & WooCommerce</li>
-                                <li>Développement personnalisé en PHP pour intégrations spécifiques</li>
-                                <li>Optimisation SEO, performance et responsive design</li>
-                                <li>Maintenance technique et accompagnement client</li>
-                            </ul>
-                            <div class="tech-tags">
-                                <span class="tech-tag">WordPress</span>
-                                <span class="tech-tag">WooCommerce</span>
-                                <span class="tech-tag">PHP</span>
-                                <span class="tech-tag">SEO</span>
-                            </div>
+                        <h4 class="timeline-company">Indépendant</h4>
+                        <p class="timeline-subtitle">Développement de solutions e-commerce sur-mesure</p>
+                        <ul class="timeline-description">
+                            <li>Création de 15+ sites e-commerce avec WordPress & WooCommerce</li>
+                            <li>Développement de fonctionnalités personnalisées en PHP pour intégrations spécifiques</li>
+                            <li>Optimisation SEO et performances : amélioration des temps de chargement de 40%</li>
+                            <li>Maintenance technique et support client continu</li>
+                            <li>Gestion complète de projets de A à Z (analyse des besoins, développement, déploiement)</li>
+                        </ul>
+                        <div class="tech-stack">
+                            <span class="tech-tag">WordPress</span>
+                            <span class="tech-tag">WooCommerce</span>
+                            <span class="tech-tag">PHP</span>
+                            <span class="tech-tag">MySQL</span>
+                            <span class="tech-tag">SEO</span>
                         </div>
                     </div>
+                </div>
 
-
-                    <div class="experience-item">
-                        <div class="item-header">
-                            <div>
-                                <div class="item-title">Stagiaire Développeur Web & Mobile</div>
-                                <div class="item-company">Agence web</div>
-                            </div>
-                            <div class="item-date">2021</div>
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-header">
+                            <h3>Stagiaire Développeur Web & Mobile</h3>
+                            <span class="timeline-date">2021</span>
                         </div>
-                        <div class="item-description">
-                            <ul>
-                                <li>Participation à une application mobile hybride (front et back)</li>
-                                <li>Intégration HTML/CSS, développement PHP/MySQL</li>
-                                <li>Réalisation de tests utilisateurs, corrections de bugs, mise en production</li>
-                            </ul>
-                            <div class="tech-tags">
-                                <span class="tech-tag">HTML/CSS</span>
-                                <span class="tech-tag">PHP</span>
-                                <span class="tech-tag">MySQL</span>
+                        <h4 class="timeline-company">Agence Web - Région PACA</h4>
+                        <p class="timeline-subtitle">Participation au développement d'applications web et mobile</p>
+                        <ul class="timeline-description">
+                            <li>Développement d'une application mobile hybride (frontend et backend)</li>
+                            <li>Intégration HTML/CSS responsive et optimisation UX/UI</li>
+                            <li>Développement backend en PHP/MySQL avec architecture MVC</li>
+                            <li>Tests utilisateurs, corrections de bugs et mise en production</li>
+                            <li>Collaboration avec l'équipe design pour l'implémentation des maquettes</li>
+                        </ul>
+                        <div class="tech-stack">
+                            <span class="tech-tag">HTML/CSS</span>
+                            <span class="tech-tag">PHP</span>
+                            <span class="tech-tag">MySQL</span>
+                            <span class="tech-tag">JavaScript</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Formation Section -->
+        <section id="formation" class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">Formation</h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="education-grid">
+                <div class="education-card">
+                    <div class="education-icon">🎓</div>
+                    <h3>Concepteur Développeur d'Applications (CDA)</h3>
+                    <h4>La Plateforme_ - Toulon, France</h4>
+                    <span class="education-date">2024-2025</span>
+                    <ul>
+                        <li>Spécialisation : Java/Spring Boot, Microservices, Architecture logicielle</li>
+                        <li>Compétences acquises : Conception logicielle, architecture MVC, APIs REST</li>
+                        <li>Technologies : Docker, Cloud computing, tests unitaires</li>
+                        <li>Projet final : Application pédagogique collaborative en équipe</li>
+                    </ul>
+                </div>
+
+                <div class="education-card">
+                    <div class="education-icon">💻</div>
+                    <h3>Formation Autodidacte - Développement C#/.NET</h3>
+                    <h4>Formation personnelle en ligne</h4>
+                    <span class="education-date">2022</span>
+                    <ul>
+                        <li>Apprentissage approfondi : Syntaxe C#, POO, héritage, encapsulation</li>
+                        <li>Framework ASP.NET MVC : Contrôleurs, vues Razor, routage, sécurité</li>
+                        <li>Projet pratique : E-commerce complet avec authentification</li>
+                        <li>Base de données : Entity Framework, SQL Server, requêtes optimisées</li>
+                    </ul>
+                </div>
+
+                <div class="education-card">
+                    <div class="education-icon">🌐</div>
+                    <h3>Développeur Web et Web Mobile</h3>
+                    <h4>AFPA - Formation certifiante</h4>
+                    <span class="education-date">Nov 2020 - Août 2021</span>
+                    <ul>
+                        <li>Développement Full-Stack : PHP, JavaScript, HTML5, CSS3</li>
+                        <li>Framework modernes : Laravel, React.js, TypeScript (initiation)</li>
+                        <li>Base de données : Conception et optimisation MySQL</li>
+                        <li>Projets pratiques : Sites e-commerce avec CMS (WordPress, WooCommerce)</li>
+                        <li>Certification : Titre professionnel niveau 5 (Bac+2)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">Compétences Techniques</h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="skills-container">
+                <div class="skills-category">
+                    <h3>Langages de Programmation</h3>
+                    <div class="skill-list">
+                        <div class="skill-item">
+                            <span class="skill-name">Java</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-width="90"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">JavaScript/TypeScript</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-width="85"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">PHP</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-width="80"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">C#</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-width="75"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Go</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-width="70"></div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>
 
-            <section class="content-section">
-                <h2>🎓 Formations</h2>
-                <div class="content-section-body">
-                    <div class="education-item">
-                        <div class="item-header">
-                            <div>
-                                <div class="item-title">Concepteur Développeur d'Applications (CDA)</div>
-                                <div class="item-company">La Plateforme_ Toulon</div>
-                            </div>
-                            <div class="item-date">2024 - 2025</div>
-                        </div>
-                        <div class="item-description">
-                            <ul>
-                                <li>Développement Java/Spring Boot et microservices</li>
-                                <li>Conception logicielle, architecture MVC, API REST</li>
-                                <li>Introduction au cloud et à Docker</li>
-                                <li>Projet d'application pédagogique en équipe (partage de cours et fichiers)</li>
-                            </ul>
+                <div class="skills-category">
+                    <h3>Framework & Technologies</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Spring Boot</span>
+                        <span class="skill-tag">Laravel</span>
+                        <span class="skill-tag">ASP.NET MVC</span>
+                        <span class="skill-tag">.NET Core</span>
+                        <span class="skill-tag">React</span>
+                        <span class="skill-tag">Bootstrap</span>
+                        <span class="skill-tag">WordPress</span>
+                        <span class="skill-tag">WooCommerce</span>
+                    </div>
+                </div>
+
+                <div class="skills-category">
+                    <h3>Bases de Données</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">MySQL</span>
+                        <span class="skill-tag">SQLite</span>
+                        <span class="skill-tag">MongoDB</span>
+                        <span class="skill-tag">Entity Framework</span>
+                        <span class="skill-tag">JPA/Hibernate</span>
+                    </div>
+                </div>
+
+                <div class="skills-category">
+                    <h3>Outils & DevOps</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Git/GitHub</span>
+                        <span class="skill-tag">Docker</span>
+                        <span class="skill-tag">Trello</span>
+                        <span class="skill-tag">Figma</span>
+                        <span class="skill-tag">Postman</span>
+                        <span class="skill-tag">Visual Studio Code</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">Projets Personnels</h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-header">
+                        <h3>Application E-commerce .NET</h3>
+                        <span class="project-date">2022</span>
+                    </div>
+                    <p class="project-subtitle">Projet de formation autodidacte</p>
+                    <p class="project-description">Stack : C#, ASP.NET MVC, Entity Framework, SQL Server</p>
+                    <ul class="project-features">
+                        <li>Catalogue produit, panier, système de paiement, gestion utilisateurs</li>
+                        <li>Sécurité : Authentification avec Identity, validation des données, protection CSRF</li>
+                        <li>Architecture : Pattern MVC, séparation des responsabilités, code propre</li>
+                    </ul>
+                    <div class="project-tech">
+                        <span class="tech-tag">C#</span>
+                        <span class="tech-tag">ASP.NET</span>
+                        <span class="tech-tag">Entity Framework</span>
+                        <span class="tech-tag">SQL Server</span>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-header">
+                        <h3>Application de Partage Pédagogique</h3>
+                        <span class="project-date">2024-2025</span>
+                    </div>
+                    <p class="project-subtitle">Projet étudiant en équipe</p>
+                    <p class="project-description">Stack : Java, Spring Boot, microservices, Docker</p>
+                    <ul class="project-features">
+                        <li>Partage de cours et fichiers, gestion des utilisateurs, API REST</li>
+                        <li>Architecture : Microservices, conteneurisation Docker, API Gateway</li>
+                        <li>Collaboration : Travail en équipe, méthodologie Agile, documentation technique</li>
+                    </ul>
+                    <div class="project-tech">
+                        <span class="tech-tag">Java</span>
+                        <span class="tech-tag">Spring Boot</span>
+                        <span class="tech-tag">Docker</span>
+                        <span class="tech-tag">Microservices</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">Contact</h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="contact-container">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">📞</div>
+                        <div class="contact-details">
+                            <h4>Téléphone</h4>
+                            <p>06 15 98 04 38</p>
                         </div>
                     </div>
-
-                    <div class="education-item">
-                        <div class="item-header">
-                            <div>
-                                <div class="item-title">Formation autodidacte - Développement C#/.NET</div>
-                                <div class="item-company">En ligne / personnel</div>
-                            </div>
-                            <div class="item-date">2022</div>
-                        </div>
-                        <div class="item-description">
-                            <ul>
-                                <li>Apprentissage du langage C# : syntaxe, classes, objets, héritage, encapsulation</li>
-                                <li>Framework ASP.NET MVC : contrôleurs, vues Razor, routage, sécurité</li>
-                                <li>Projet e-commerce : catalogue produit, panier, paiement, gestion utilisateurs</li>
-                                <li>Entity Framework, SQL Server, authentification avec Identity</li>
-                            </ul>
+                    <div class="contact-item">
+                        <div class="contact-icon">📧</div>
+                        <div class="contact-details">
+                            <h4>Email</h4>
+                            <p>salim.ou83s@gmail.com</p>
                         </div>
                     </div>
-
-                    <div class="education-item">
-                        <div class="item-header">
-                            <div>
-                                <div class="item-title">Développeur Web et Web Mobile</div>
-                                <div class="item-company">AFPA</div>
-                            </div>
-                            <div class="item-date">Nov 2020 - Août 2021</div>
+                    <div class="contact-item">
+                        <div class="contact-icon">📍</div>
+                        <div class="contact-details">
+                            <h4>Localisation</h4>
+                            <p>Hyères (83400), France</p>
                         </div>
-                        <div class="item-description">
-                            <ul>
-                                <li>Développement web full-stack (PHP, JavaScript, HTML, CSS)</li>
-                                <li>Initiation à React.js et TypeScript</li>
-                                <li>Introduction au framework Laravel pour le développement back-end</li>
-                                <li>Conception de bases de données relationnelles (MySQL), intégration web</li>
-                                <li>Réalisation de projets e-commerce complets avec CMS (WordPress, WooCommerce)</li>
-                            </ul>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">🌐</div>
+                        <div class="contact-details">
+                            <h4>Portfolio</h4>
+                            <p>https://salim-ou.github.io/cv_salim/</p>
                         </div>
                     </div>
                 </div>
-            </section>
-
-            <section class="content-section">
-                <h2>🧠 Compétences techniques</h2>
-                <div class="content-section-body">
-                    <div class="skills-grid">
-                        <div class="skill-category">
-                            <h3>Langages</h3>
-                            <p>Java, JavaScript, PHP, Go, C#, Python (bases), TypeScript</p>
-                        </div>
-                        <div class="skill-category">
-                            <h3>Frameworks</h3>
-                            <p>Spring Boot, .NET, Laravel, Bootstrap, React, ASP.NET</p>
-                        </div>
-                        <div class="skill-category">
-                            <h3>Front-end</h3>
-                            <p>HTML5, CSS3, JavaScript, React, TypeScript</p>
-                        </div>
-                        <div class="skill-category">
-                            <h3>Back-end</h3>
-                            <p>Java Spring Boot, PHP, Laravel, .NET (C#)</p>
-                        </div>
-                        <div class="skill-category">
-                            <h3>Bases de données</h3>
-                            <p>MySQL, Microsoft SQL, SQLite, MongoDB</p>
-                        </div>
-                        <div class="skill-category">
-                            <h3>Outils & DevOps</h3>
-                            <p>GitHub, Trello, Figma, Docker (bases), API REST, architecture microservices</p>
-                        </div>
-                    </div>
+                <div class="availability">
+                    <h3>Disponibilité</h3>
+                    <p>Recherche active d'un poste en CDI ou Alternance</p>
+                    <p>Disponible immédiatement • Mobilité géographique envisageable</p>
+                    <p>Ouvert aux opportunités de télétravail partiel</p>
                 </div>
-            </section>
-        </main>
+            </div>
+        </section>
     </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
