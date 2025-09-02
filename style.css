@@ -1,4 +1,3 @@
-
 /* Reset & Base */
 * {
     margin: 0;
@@ -821,4 +820,203 @@ body {
 .slide-in-right.visible {
     opacity: 1;
     transform: translateX(0);
+}
+
+/* Mobile Responsivity */
+@media (max-width: 768px) {
+    .content-section {
+        padding: 60px 20px;
+    }
+
+    .hero-section {
+        min-height: 100vh;
+        padding: 20px;
+    }
+
+    .profile-card {
+        padding: 40px 20px;
+    }
+
+    .profile-avatar {
+        width: 120px;
+        height: 120px;
+    }
+
+    .avatar-text {
+        font-size: 40px;
+    }
+
+    .profile-name {
+        font-size: 36px;
+    }
+
+    .profile-title {
+        font-size: 20px;
+    }
+
+    .section-title {
+        font-size: 32px;
+    }
+
+    .about-content {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .about-stats {
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: 1fr;
+    }
+
+    .contact-container {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .timeline {
+        padding-left: 20px;
+    }
+
+    .timeline-marker {
+        left: -18px;
+    }
+
+    .timeline-header {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .education-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .projects-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .skills-container {
+        grid-template-columns: 1fr;
+    }
+
+    .spec-tags {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .tech-stack {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .skill-tags {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .project-tech {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .content-section {
+        padding: 40px 15px;
+    }
+
+    .profile-card {
+        padding: 30px 15px;
+    }
+
+    .profile-avatar {
+        width: 100px;
+        height: 100px;
+    }
+
+    .avatar-text {
+        font-size: 35px;
+    }
+
+    .profile-name {
+        font-size: 28px;
+    }
+
+    .profile-title {
+        font-size: 18px;
+    }
+
+    .section-title {
+        font-size: 28px;
+    }
+
+    .social-links {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        max-width: 180px;
+    }
+
+    .social-link {
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
+    }
+
+    .about-text .lead {
+        font-size: 18px;
+    }
+
+    .about-text p {
+        font-size: 14px;
+    }
+
+    .about-stats {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(3, 1fr);
+    }
+
+    .timeline-content {
+        padding: 20px;
+    }
+
+    .timeline-header h3 {
+        font-size: 20px;
+    }
+
+    .timeline-company {
+        font-size: 16px;
+    }
+
+    .education-card {
+        padding: 25px 15px;
+    }
+
+    .project-card {
+        padding: 25px 15px;
+    }
+
+    .project-header h3 {
+        font-size: 18px;
+    }
+
+    .contact-item {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 15px;
+    }
+
+    .availability {
+        padding: 30px 20px;
+    }
+
+    .spec-tags {
+        grid-template-columns: 1fr;
+    }
+
+    .tech-stack {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .skill-tags {
+        grid-template-columns: 1fr;
+    }
+
+    .project-tech {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
