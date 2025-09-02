@@ -1,4 +1,3 @@
-
 // DOM Elements
 const navToggle = document.getElementById('navToggle');
 const navLinks = document.getElementById('navLinks');
@@ -21,6 +20,12 @@ document.addEventListener('DOMContentLoaded', function() {
     initSmoothScrolling();
     initVisitorCounter();
     initScrollNavigation();
+    
+    // Track section views after page load
+    setTimeout(trackSectionViews, 2000);
+    
+    // Log visitor stats for debugging (optional)
+    setTimeout(logVisitorStats, 3000);
 });
 
 // Navigation visibility on scroll
@@ -277,24 +282,179 @@ function initSmoothScrolling() {
     });
 }
 
-// Visitor counter (invisible tracking)
+// Visitor counter with analytics
 function initVisitorCounter() {
-    // Simple invisible visitor tracking
+    trackVisitorAnalytics();
+}
+
+function trackVisitorAnalytics() {
     try {
-        // Use an API or localStorage for visitor counting
+        // Track visitor with timestamp
+        const visitTime = new Date().toISOString();
+        const userAgent = navigator.userAgent;
+        const screenInfo = `${screen.width}x${screen.height}`;
+        
+        // Primary tracking with CountAPI
         fetch('https://api.countapi.xyz/hit/salim-cv-2025/visits')
             .then(response => response.json())
             .then(data => {
-                console.log(`Visitor count: ${data.value}`);
-                // Store for potential future use
-                sessionStorage.setItem('visitorCount', data.value);
+                console.log(`👤 Visiteur n°${data.value}`);
+                
+                // Store visitor data locally
+                const visitorData = {
+                    count: data.value,
+                    timestamp: visitTime,
+                    screen: screenInfo,
+                    userAgent: userAgent.substring(0, 100), // Truncate for storage
+                    sessionId: generateSessionId()
+                };
+                
+                // Store in sessionStorage
+                sessionStorage.setItem('visitorData', JSON.stringify(visitorData));
+                
+                // Track unique daily visitors
+                trackDailyVisitor(data.value);
+                
+                // Optional: Send to secondary tracking
+                trackWithBackup(visitorData);
             })
             .catch(error => {
-                console.log('Visitor tracking unavailable');
+                console.log('📊 Tracking principal indisponible');
+                // Fallback tracking
+                trackLocalVisitor();
             });
+            
     } catch (error) {
-        console.log('Visitor counter initialization failed');
+        console.log('❌ Erreur d\'initialisation du tracking');
+        trackLocalVisitor();
     }
+}
+
+function generateSessionId() {
+    return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+}
+
+function trackDailyVisitor(totalCount) {
+    const today = new Date().toDateString();
+    const dailyKey = 'daily_' + today.replace(/\s+/g, '_');
+    
+    // Track daily visitors
+    fetch(`https://api.countapi.xyz/hit/salim-cv-2025/${dailyKey}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log(`📅 Visiteur du jour n°${data.value}`);
+            sessionStorage.setItem('dailyVisitorCount', data.value);
+        })
+        .catch(() => {
+            console.log('Tracking journalier indisponible');
+        });
+}
+
+function trackWithBackup(visitorData) {
+    // Backup tracking avec HitCounter
+    fetch('https://api.hitcounter.dev/hit/salim-cv-backup', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            timestamp: visitorData.timestamp,
+            session: visitorData.sessionId
+        })
+    })
+    .then(() => console.log('🔄 Backup tracking réussi'))
+    .catch(() => console.log('Backup tracking indisponible'));
+}
+
+function trackLocalVisitor() {
+    // Fallback: tracking local si APIs indisponibles
+    let localCount = parseInt(localStorage.getItem('localVisitorCount') || '0');
+    localCount++;
+    localStorage.setItem('localVisitorCount', localCount.toString());
+    
+    const localData = {
+        count: localCount,
+        timestamp: new Date().toISOString(),
+        type: 'local'
+    };
+    
+    sessionStorage.setItem('visitorData', JSON.stringify(localData));
+    console.log(`💾 Visiteur local n°${localCount}`);
+}
+
+// Function to get visitor statistics (pour usage futur)
+function getVisitorStats() {
+    return new Promise(async (resolve) => {
+        try {
+            // Get total visitors
+            const totalResponse = await fetch('https://api.countapi.xyz/get/salim-cv-2025/visits');
+            const totalData = await totalResponse.json();
+            
+            // Get today's visitors
+            const today = new Date().toDateString();
+            const dailyKey = 'daily_' + today.replace(/\s+/g, '_');
+            const dailyResponse = await fetch(`https://api.countapi.xyz/get/salim-cv-2025/${dailyKey}`);
+            const dailyData = await dailyResponse.json();
+            
+            const stats = {
+                total: totalData.value || 0,
+                today: dailyData.value || 0,
+                session: JSON.parse(sessionStorage.getItem('visitorData') || '{}'),
+                timestamp: new Date().toISOString()
+            };
+            
+            resolve(stats);
+        } catch (error) {
+            // Fallback to local data
+            const localData = JSON.parse(sessionStorage.getItem('visitorData') || '{}');
+            resolve({
+                total: localData.count || 'N/A',
+                today: 'N/A',
+                session: localData,
+                timestamp: new Date().toISOString(),
+                source: 'local'
+            });
+        }
+    });
+}
+
+// Function to display stats (optionnel, pour debug)
+function logVisitorStats() {
+    getVisitorStats().then(stats => {
+        console.group('📊 Statistiques de visite');
+        console.log('Total:', stats.total);
+        console.log('Aujourd\'hui:', stats.today);
+        console.log('Session:', stats.session.sessionId);
+        console.log('Timestamp:', stats.timestamp);
+        console.groupEnd();
+    });
+}
+
+// Track page views on specific sections
+function trackSectionViews() {
+    const sections = document.querySelectorAll('section[id]');
+    const sectionObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const sectionId = entry.target.id;
+                const viewKey = `section_${sectionId}`;
+                
+                // Track section view
+                fetch(`https://api.countapi.xyz/hit/salim-cv-2025/${viewKey}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(`👁️ Section "${sectionId}" vue ${data.value} fois`);
+                    })
+                    .catch(() => {
+                        // Silent fail for section tracking
+                    });
+            }
+        });
+    }, { threshold: 0.5 });
+
+    sections.forEach(section => {
+        sectionObserver.observe(section);
+    });
 }
 
 // Utility functions
@@ -396,7 +556,7 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-// Print optimizationAA
+// Print optimization
 window.addEventListener('beforeprint', () => {
     // Hide interactive elements before printing
     document.querySelectorAll('.nav-menu, #particles').forEach(el => {
