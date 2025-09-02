@@ -21,22 +21,23 @@ document.addEventListener('DOMContentLoaded', function() {
     initVisitorCounter();
     initScrollNavigation();
     
-    // Track section views after page load
-    setTimeout(trackSectionViews, 2000);
-    
-    // Log visitor stats for debugging (optional)
-    setTimeout(logVisitorStats, 3000);
+    // Performance monitoring
+    logPagePerformance();
 });
 
-// Navigation visibility on scroll
+// Navigation visibility on scroll (but nav is invisible anyway)
 function initScrollNavigation() {
     const navMenu = document.querySelector('.nav-menu');
+    if (!navMenu) return; // Skip if nav doesn't exist
+    
     const heroSection = document.querySelector('.hero-section');
+    if (!heroSection) return;
     
     window.addEventListener('scroll', () => {
         const heroHeight = heroSection.offsetHeight;
         const scrollY = window.pageYOffset;
         
+        // Navigation remains invisible as per CSS
         if (scrollY > heroHeight * 0.8) {
             navMenu.classList.add('visible');
         } else {
@@ -47,23 +48,36 @@ function initScrollNavigation() {
 
 // Particles Background Animation
 function initParticles() {
+    if (!particlesContainer) return;
+    
     createParticles();
     animateParticles();
 }
 
 function createParticles() {
+    const colors = [
+        'rgba(231, 76, 60, 0.6)',   // Red
+        'rgba(52, 152, 219, 0.6)',  // Blue  
+        'rgba(46, 204, 113, 0.6)',  // Green
+        'rgba(155, 89, 182, 0.6)',  // Purple
+        'rgba(241, 196, 15, 0.6)'   // Yellow
+    ];
+    
     for (let i = 0; i < config.particlesCount; i++) {
         const particle = document.createElement('div');
         particle.className = 'particle';
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        
         particle.style.cssText = `
             position: absolute;
             width: ${Math.random() * config.maxParticleSize + 1}px;
             height: ${Math.random() * config.maxParticleSize + 1}px;
-            background: rgba(100, 255, 218, ${Math.random() * 0.5 + 0.2});
+            background: ${color};
             border-radius: 50%;
             left: ${Math.random() * 100}%;
             top: ${Math.random() * 100}%;
             pointer-events: none;
+            box-shadow: 0 0 6px ${color};
         `;
         
         // Add movement properties
@@ -80,19 +94,22 @@ function animateParticles() {
     function moveParticles() {
         particles.forEach(particle => {
             let rect = particle.getBoundingClientRect();
-            let x = rect.left + particle.speedX;
-            let y = rect.top + particle.speedY;
+            let x = parseFloat(particle.style.left) || rect.left;
+            let y = parseFloat(particle.style.top) || rect.top;
+            
+            x += particle.speedX;
+            y += particle.speedY;
             
             // Bounce off edges
-            if (x <= 0 || x >= window.innerWidth) {
+            if (x <= 0 || x >= window.innerWidth - 10) {
                 particle.speedX *= -1;
             }
-            if (y <= 0 || y >= window.innerHeight) {
+            if (y <= 0 || y >= window.innerHeight - 10) {
                 particle.speedY *= -1;
             }
             
-            particle.style.left = x + 'px';
-            particle.style.top = y + 'px';
+            particle.style.left = Math.max(0, Math.min(x, window.innerWidth - 10)) + 'px';
+            particle.style.top = Math.max(0, Math.min(y, window.innerHeight - 10)) + 'px';
         });
         
         requestAnimationFrame(moveParticles);
@@ -101,8 +118,10 @@ function animateParticles() {
     moveParticles();
 }
 
-// Navigation functionality
+// Navigation functionality (even though nav is invisible)
 function initNavigation() {
+    if (!navToggle || !navLinks) return;
+    
     // Mobile menu toggle
     navToggle.addEventListener('click', () => {
         navLinks.classList.toggle('active');
@@ -125,7 +144,9 @@ function updateActiveNavItem() {
     const sections = document.querySelectorAll('section[id]');
     const navItems = document.querySelectorAll('.nav-links a');
 
-    window.addEventListener('scroll', () => {
+    if (!sections.length || !navItems.length) return;
+
+    window.addEventListener('scroll', throttle(() => {
         const scrollPos = window.scrollY + 100;
         
         sections.forEach(section => {
@@ -142,7 +163,7 @@ function updateActiveNavItem() {
                 });
             }
         });
-    });
+    }, 100));
 }
 
 // Scroll animations with Intersection Observer
@@ -156,6 +177,8 @@ function initScrollAnimations() {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
+                // Track section view locally
+                trackSectionView(entry.target.id);
             }
         });
     }, observerOptions);
@@ -171,7 +194,6 @@ function initScrollAnimations() {
 
     animatedElements.forEach((element, index) => {
         element.classList.add('fade-in');
-        // Add stagger effect
         element.style.transitionDelay = `${index * 0.1}s`;
         observer.observe(element);
     });
@@ -194,6 +216,8 @@ function initScrollAnimations() {
 // Animated skill bars
 function initSkillBars() {
     const skillBars = document.querySelectorAll('.skill-progress');
+    
+    if (!skillBars.length) return;
     
     const skillObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -224,7 +248,8 @@ function initTypingEffect() {
         'Développeur Full-Stack',
         'Expert Java/Spring Boot',
         'Spécialiste APIs REST',
-        'Passionné de Code'
+        'Passionné de Code',
+        'Architecte Logiciel'
     ];
     
     let textIndex = 0;
@@ -282,51 +307,65 @@ function initSmoothScrolling() {
     });
 }
 
-// Visitor counter with analytics
+// Enhanced Local Visitor Counter
 function initVisitorCounter() {
-    trackVisitorAnalytics();
+    trackVisitorLocally();
+    displayVisitorStats();
 }
 
-function trackVisitorAnalytics() {
+function trackVisitorLocally() {
     try {
-        // Track visitor with timestamp
-        const visitTime = new Date().toISOString();
-        const userAgent = navigator.userAgent;
-        const screenInfo = `${screen.width}x${screen.height}`;
+        const now = new Date();
+        const today = now.toDateString();
+        const visitTime = now.toISOString();
         
-        // Primary tracking with CountAPI
-        fetch('https://api.countapi.xyz/hit/salim-cv-2025/visits')
-            .then(response => response.json())
-            .then(data => {
-                console.log(`👤 Visiteur n°${data.value}`);
-                
-                // Store visitor data locally
-                const visitorData = {
-                    count: data.value,
-                    timestamp: visitTime,
-                    screen: screenInfo,
-                    userAgent: userAgent.substring(0, 100), // Truncate for storage
-                    sessionId: generateSessionId()
-                };
-                
-                // Store in sessionStorage
-                sessionStorage.setItem('visitorData', JSON.stringify(visitorData));
-                
-                // Track unique daily visitors
-                trackDailyVisitor(data.value);
-                
-                // Optional: Send to secondary tracking
-                trackWithBackup(visitorData);
-            })
-            .catch(error => {
-                console.log('📊 Tracking principal indisponible');
-                // Fallback tracking
-                trackLocalVisitor();
-            });
-            
+        // Generate unique session ID
+        const sessionId = generateSessionId();
+        
+        // Track total visitors
+        let totalVisitors = parseInt(localStorage.getItem('totalVisitors') || '0');
+        totalVisitors++;
+        localStorage.setItem('totalVisitors', totalVisitors.toString());
+        
+        // Track daily visitors
+        const dailyKey = `dailyVisitors_${today}`;
+        let dailyVisitors = parseInt(localStorage.getItem(dailyKey) || '0');
+        dailyVisitors++;
+        localStorage.setItem(dailyKey, dailyVisitors.toString());
+        
+        // Track session data
+        const sessionData = {
+            sessionId: sessionId,
+            timestamp: visitTime,
+            screen: `${screen.width}x${screen.height}`,
+            userAgent: navigator.userAgent.substring(0, 100),
+            referrer: document.referrer || 'Direct',
+            language: navigator.language,
+            platform: navigator.platform
+        };
+        
+        sessionStorage.setItem('currentSession', JSON.stringify(sessionData));
+        
+        // Store visit history (last 10 visits)
+        let visitHistory = JSON.parse(localStorage.getItem('visitHistory') || '[]');
+        visitHistory.unshift({
+            date: visitTime,
+            sessionId: sessionId
+        });
+        
+        // Keep only last 10 visits
+        visitHistory = visitHistory.slice(0, 10);
+        localStorage.setItem('visitHistory', JSON.stringify(visitHistory));
+        
+        console.log(`👤 Visiteur total n°${totalVisitors}`);
+        console.log(`📅 Visiteur du jour n°${dailyVisitors}`);
+        console.log(`🔗 Session: ${sessionId}`);
+        
+        // Clean old daily counters (keep only last 30 days)
+        cleanOldDailyCounters();
+        
     } catch (error) {
-        console.log('❌ Erreur d\'initialisation du tracking');
-        trackLocalVisitor();
+        console.log('Erreur de tracking local:', error);
     }
 }
 
@@ -334,127 +373,76 @@ function generateSessionId() {
     return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
 }
 
-function trackDailyVisitor(totalCount) {
-    const today = new Date().toDateString();
-    const dailyKey = 'daily_' + today.replace(/\s+/g, '_');
+function cleanOldDailyCounters() {
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
     
-    // Track daily visitors
-    fetch(`https://api.countapi.xyz/hit/salim-cv-2025/${dailyKey}`)
-        .then(response => response.json())
-        .then(data => {
-            console.log(`📅 Visiteur du jour n°${data.value}`);
-            sessionStorage.setItem('dailyVisitorCount', data.value);
-        })
-        .catch(() => {
-            console.log('Tracking journalier indisponible');
-        });
-}
-
-function trackWithBackup(visitorData) {
-    // Backup tracking avec HitCounter
-    fetch('https://api.hitcounter.dev/hit/salim-cv-backup', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            timestamp: visitorData.timestamp,
-            session: visitorData.sessionId
-        })
-    })
-    .then(() => console.log('🔄 Backup tracking réussi'))
-    .catch(() => console.log('Backup tracking indisponible'));
-}
-
-function trackLocalVisitor() {
-    // Fallback: tracking local si APIs indisponibles
-    let localCount = parseInt(localStorage.getItem('localVisitorCount') || '0');
-    localCount++;
-    localStorage.setItem('localVisitorCount', localCount.toString());
-    
-    const localData = {
-        count: localCount,
-        timestamp: new Date().toISOString(),
-        type: 'local'
-    };
-    
-    sessionStorage.setItem('visitorData', JSON.stringify(localData));
-    console.log(`💾 Visiteur local n°${localCount}`);
-}
-
-// Function to get visitor statistics (pour usage futur)
-function getVisitorStats() {
-    return new Promise(async (resolve) => {
-        try {
-            // Get total visitors
-            const totalResponse = await fetch('https://api.countapi.xyz/get/salim-cv-2025/visits');
-            const totalData = await totalResponse.json();
+    Object.keys(localStorage).forEach(key => {
+        if (key.startsWith('dailyVisitors_')) {
+            const dateStr = key.replace('dailyVisitors_', '');
+            const date = new Date(dateStr);
             
-            // Get today's visitors
-            const today = new Date().toDateString();
-            const dailyKey = 'daily_' + today.replace(/\s+/g, '_');
-            const dailyResponse = await fetch(`https://api.countapi.xyz/get/salim-cv-2025/${dailyKey}`);
-            const dailyData = await dailyResponse.json();
-            
-            const stats = {
-                total: totalData.value || 0,
-                today: dailyData.value || 0,
-                session: JSON.parse(sessionStorage.getItem('visitorData') || '{}'),
-                timestamp: new Date().toISOString()
-            };
-            
-            resolve(stats);
-        } catch (error) {
-            // Fallback to local data
-            const localData = JSON.parse(sessionStorage.getItem('visitorData') || '{}');
-            resolve({
-                total: localData.count || 'N/A',
-                today: 'N/A',
-                session: localData,
-                timestamp: new Date().toISOString(),
-                source: 'local'
-            });
+            if (date < thirtyDaysAgo) {
+                localStorage.removeItem(key);
+            }
         }
     });
 }
 
-// Function to display stats (optionnel, pour debug)
-function logVisitorStats() {
-    getVisitorStats().then(stats => {
-        console.group('📊 Statistiques de visite');
-        console.log('Total:', stats.total);
-        console.log('Aujourd\'hui:', stats.today);
-        console.log('Session:', stats.session.sessionId);
-        console.log('Timestamp:', stats.timestamp);
-        console.groupEnd();
-    });
+function trackSectionView(sectionId) {
+    if (!sectionId) return;
+    
+    const sectionKey = `section_${sectionId}`;
+    let sectionViews = parseInt(localStorage.getItem(sectionKey) || '0');
+    sectionViews++;
+    localStorage.setItem(sectionKey, sectionViews.toString());
+    
+    console.log(`👁️ Section "${sectionId}" vue ${sectionViews} fois`);
 }
 
-// Track page views on specific sections
-function trackSectionViews() {
-    const sections = document.querySelectorAll('section[id]');
-    const sectionObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const sectionId = entry.target.id;
-                const viewKey = `section_${sectionId}`;
-                
-                // Track section view
-                fetch(`https://api.countapi.xyz/hit/salim-cv-2025/${viewKey}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log(`👁️ Section "${sectionId}" vue ${data.value} fois`);
-                    })
-                    .catch(() => {
-                        // Silent fail for section tracking
-                    });
-            }
-        });
-    }, { threshold: 0.5 });
-
-    sections.forEach(section => {
-        sectionObserver.observe(section);
+function getVisitorStats() {
+    const totalVisitors = parseInt(localStorage.getItem('totalVisitors') || '0');
+    const today = new Date().toDateString();
+    const dailyKey = `dailyVisitors_${today}`;
+    const dailyVisitors = parseInt(localStorage.getItem(dailyKey) || '0');
+    
+    const sessionData = JSON.parse(sessionStorage.getItem('currentSession') || '{}');
+    const visitHistory = JSON.parse(localStorage.getItem('visitHistory') || '[]');
+    
+    // Get section views
+    const sectionStats = {};
+    Object.keys(localStorage).forEach(key => {
+        if (key.startsWith('section_')) {
+            const sectionName = key.replace('section_', '');
+            sectionStats[sectionName] = parseInt(localStorage.getItem(key) || '0');
+        }
     });
+    
+    return {
+        total: totalVisitors,
+        today: dailyVisitors,
+        session: sessionData,
+        visitHistory: visitHistory,
+        sectionViews: sectionStats,
+        timestamp: new Date().toISOString()
+    };
+}
+
+function displayVisitorStats() {
+    setTimeout(() => {
+        const stats = getVisitorStats();
+        
+        console.group('📊 Statistiques détaillées');
+        console.log('Total visiteurs:', stats.total);
+        console.log('Aujourd\'hui:', stats.today);
+        console.log('Session actuelle:', stats.session.sessionId);
+        console.log('Écran:', stats.session.screen);
+        console.log('Plateforme:', stats.session.platform);
+        console.log('Langue:', stats.session.language);
+        console.log('Sections les plus vues:', stats.sectionViews);
+        console.log('Historique des visites:', stats.visitHistory.length, 'dernières visites');
+        console.groupEnd();
+    }, 2000);
 }
 
 // Utility functions
@@ -483,38 +471,54 @@ function debounce(func, wait) {
     };
 }
 
+// Performance monitoring
+function logPagePerformance() {
+    if ('performance' in window) {
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const perfData = performance.getEntriesByType('navigation')[0];
+                const loadTime = Math.round(performance.now());
+                
+                console.group('⚡ Performance');
+                console.log(`Temps de chargement: ${loadTime}ms`);
+                if (perfData) {
+                    console.log(`DNS: ${Math.round(perfData.domainLookupEnd - perfData.domainLookupStart)}ms`);
+                    console.log(`Connexion: ${Math.round(perfData.connectEnd - perfData.connectStart)}ms`);
+                    console.log(`DOM ready: ${Math.round(perfData.domContentLoadedEventEnd - perfData.navigationStart)}ms`);
+                }
+                console.groupEnd();
+            }, 1000);
+        });
+    }
+}
+
 // Performance optimizations
-window.addEventListener('scroll', throttle(updateScrollProgress, 10));
+window.addEventListener('scroll', throttle(updateScrollProgress, 16));
 
 function updateScrollProgress() {
     const scrollTop = window.pageYOffset;
     const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    const scrollPercent = (scrollTop / docHeight) * 100;
+    const scrollPercent = Math.max(0, Math.min(100, (scrollTop / docHeight) * 100));
     
-    // Could be used for a progress bar
     document.documentElement.style.setProperty('--scroll-progress', scrollPercent + '%');
 }
 
 // Interactive hover effects
 document.addEventListener('mouseover', (e) => {
-    // Add hover effects to cards
-    if (e.target.closest('.timeline-content, .project-card, .education-card')) {
-        e.target.closest('.timeline-content, .project-card, .education-card').style.transform = 'translateY(-5px) scale(1.02)';
+    const card = e.target.closest('.timeline-content, .project-card, .education-card');
+    if (card && !card.classList.contains('hovering')) {
+        card.classList.add('hovering');
+        card.style.transform = 'translateY(-5px) scale(1.02)';
     }
 });
 
 document.addEventListener('mouseout', (e) => {
-    if (e.target.closest('.timeline-content, .project-card, .education-card')) {
-        e.target.closest('.timeline-content, .project-card, .education-card').style.transform = '';
+    const card = e.target.closest('.timeline-content, .project-card, .education-card');
+    if (card && card.classList.contains('hovering')) {
+        card.classList.remove('hovering');
+        card.style.transform = '';
     }
 });
-
-// Dynamic background gradient based on scroll
-window.addEventListener('scroll', throttle(() => {
-    const scrollPercent = window.pageYOffset / (document.documentElement.scrollHeight - window.innerHeight);
-    const hue = Math.floor(scrollPercent * 60) + 220; // From blue to purple
-    document.body.style.background = `linear-gradient(135deg, hsl(${hue}, 70%, 8%) 0%, hsl(${hue + 20}, 60%, 12%) 100%)`;
-}, 100));
 
 // Easter egg: Konami code
 let konamiCode = [];
@@ -537,8 +541,8 @@ document.addEventListener('keydown', (e) => {
 });
 
 function activateEasterEgg() {
-    // Fun animation when Konami code is entered
     document.body.style.animation = 'rainbow 2s linear infinite';
+    console.log('🎉 Konami code activé !');
     
     setTimeout(() => {
         document.body.style.animation = '';
@@ -553,34 +557,47 @@ style.textContent = `
         0% { filter: hue-rotate(0deg); }
         100% { filter: hue-rotate(360deg); }
     }
+    
+    .particle {
+        transition: all 0.3s ease;
+    }
+    
+    .hovering {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }
 `;
 document.head.appendChild(style);
 
 // Print optimization
 window.addEventListener('beforeprint', () => {
-    // Hide interactive elements before printing
-    document.querySelectorAll('.nav-menu, #particles').forEach(el => {
+    document.querySelectorAll('#particles').forEach(el => {
         el.style.display = 'none';
     });
 });
 
 window.addEventListener('afterprint', () => {
-    // Restore interactive elements after printing
-    document.querySelectorAll('.nav-menu, #particles').forEach(el => {
+    document.querySelectorAll('#particles').forEach(el => {
         el.style.display = '';
     });
 });
 
 // Error handling for all async operations
 window.addEventListener('error', (e) => {
-    console.log('Error caught:', e.error);
-    // Graceful degradation - don't break the page
+    console.log('Erreur capturée:', e.error);
 });
 
-// Performance monitoring
-if ('performance' in window) {
-    window.addEventListener('load', () => {
-        const loadTime = performance.now();
-        console.log(`Page loaded in ${Math.round(loadTime)}ms`);
-    });
-}
+// Page visibility API for accurate tracking
+document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+        console.log('👀 Page visible');
+    } else {
+        console.log('🔇 Page cachée');
+    }
+});
+
+// Export functions for potential external use
+window.CVAnalytics = {
+    getStats: getVisitorStats,
+    displayStats: displayVisitorStats,
+    generateSessionId: generateSessionId
+};
